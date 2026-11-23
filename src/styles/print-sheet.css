@@ -1,0 +1,329 @@
+/**
+ * Walker handover sheet: a fridge-notice layout that prints on exactly one
+ * black-and-white A4 page, plus an on-screen paper preview.
+ *
+ * Structure comes only from black rules, borders and font weight. Home and
+ * office printers dither grey fills into speckle or drop them entirely, so
+ * the sheet never relies on colour, tints or backgrounds to carry meaning.
+ */
+
+@page {
+  size: A4;
+  margin: 12mm;
+}
+
+:root {
+  --ink: #000;
+  --paper: #fff;
+  --rule: 4pt solid var(--ink);
+  --rule-thin: 1.5pt solid var(--ink);
+}
+
+/* Screen chrome around the sheet */
+
+body:has(.sheet) {
+  background: #d8d5cf;
+}
+
+.screen-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 210mm;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+.screen-bar__home {
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #111;
+  text-decoration: none;
+}
+
+.screen-bar__home:hover {
+  text-decoration: underline;
+}
+
+.screen-bar__print {
+  min-height: 2.75rem;
+  padding: 0.5rem 1.5rem;
+  font: inherit;
+  font-weight: 700;
+  color: var(--paper);
+  background: #111;
+  border: 2px solid #111;
+  border-radius: 999px;
+  cursor: pointer;
+}
+
+.screen-bar__print:hover {
+  color: #111;
+  background: transparent;
+}
+
+.backdrop {
+  padding: 0 1.25rem 2rem;
+}
+
+.screen-footer {
+  padding: 0 1.25rem 2.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #444;
+}
+
+.screen-footer p {
+  margin: 0;
+}
+
+/* The sheet itself */
+
+.sheet {
+  width: 210mm;
+  max-width: 100%;
+  min-height: 297mm;
+  margin: 0 auto;
+  padding: 12mm;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow:
+    0 1px 2px rgb(0 0 0 / 0.12),
+    0 12px 32px rgb(0 0 0 / 0.18);
+  font-size: 14pt;
+  line-height: 1.4;
+}
+
+.sheet p,
+.sheet ul {
+  margin: 0;
+}
+
+.sheet p + p {
+  margin-top: 2.5mm;
+}
+
+.sheet__header {
+  padding-bottom: 5mm;
+}
+
+.sheet__name {
+  margin: 0;
+  font-size: 52pt;
+  font-weight: 900;
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+}
+
+.sheet__meta {
+  margin-top: 2mm;
+  font-size: 17pt;
+  font-weight: 700;
+}
+
+.sheet__section {
+  border-top: var(--rule);
+  padding: 4mm 0 5.5mm;
+  break-inside: avoid;
+}
+
+.sheet__section h2 {
+  margin: 0 0 3.5mm;
+  font-size: 26pt;
+  font-weight: 900;
+  line-height: 1.1;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.sheet__section ul {
+  padding-left: 1.1em;
+}
+
+.sheet__section li + li {
+  margin-top: 2.5mm;
+}
+
+.sheet__pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 8mm;
+  break-inside: avoid;
+}
+
+/* Food table */
+
+.meals {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.meals th,
+.meals td {
+  padding: 3mm 3mm 3mm 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.meals thead th {
+  padding-top: 0;
+  padding-bottom: 1.5mm;
+  font-size: 10.5pt;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  border-bottom: var(--rule-thin);
+}
+
+.meals tbody tr + tr > * {
+  border-top: var(--rule-thin);
+}
+
+.meals tbody th {
+  width: 24%;
+  font-size: 15pt;
+  font-weight: 800;
+}
+
+.meals__time {
+  width: 16%;
+  font-size: 15pt;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.meals__amount {
+  display: block;
+  font-size: 16pt;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.meals__extra {
+  display: block;
+  margin-top: 1.5mm;
+  font-weight: 700;
+}
+
+/* Vet */
+
+.vet__phone {
+  font-size: 38pt;
+  font-weight: 900;
+  line-height: 1.15;
+  letter-spacing: 0.01em;
+}
+
+.vet__phone a {
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Narrow screens: reflow the paper instead of shrinking it unreadably */
+
+@media screen and (max-width: 46rem) {
+  .backdrop {
+    padding: 0 0.75rem 1.5rem;
+  }
+
+  .sheet {
+    min-height: 0;
+    padding: 1.5rem 1.25rem 2rem;
+    font-size: 12pt;
+  }
+
+  .sheet__name {
+    font-size: 34pt;
+  }
+
+  .sheet__meta {
+    font-size: 14pt;
+  }
+
+  .sheet__section h2 {
+    font-size: 20pt;
+  }
+
+  .sheet__pair {
+    grid-template-columns: 1fr;
+  }
+
+  .meals,
+  .meals tbody,
+  .meals tr,
+  .meals th,
+  .meals td {
+    display: block;
+    width: auto;
+  }
+
+  .meals tbody th {
+    width: auto;
+  }
+
+  .meals thead {
+    display: none;
+  }
+
+  .meals tbody tr {
+    padding: 3mm 0;
+  }
+
+  .meals tbody tr + tr {
+    border-top: var(--rule-thin);
+  }
+
+  .meals tbody tr + tr > * {
+    border-top: 0;
+  }
+
+  .meals th,
+  .meals td {
+    padding: 0;
+  }
+
+  .meals__time::before {
+    content: 'Normally ';
+    font-weight: 400;
+  }
+
+  .vet__phone {
+    font-size: 24pt;
+  }
+}
+
+@media print {
+  html,
+  body,
+  body:has(.sheet) {
+    background: var(--paper);
+  }
+
+  .screen-bar,
+  .screen-footer {
+    display: none;
+  }
+
+  .backdrop {
+    padding: 0;
+  }
+
+  .sheet {
+    width: auto;
+    max-width: none;
+    min-height: 0;
+    padding: 0;
+    box-shadow: none;
+  }
+
+  .sheet,
+  .sheet * {
+    color: var(--ink);
+    background: transparent;
+    box-shadow: none;
+    text-shadow: none;
+  }
+}

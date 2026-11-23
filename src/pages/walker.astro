@@ -1,0 +1,95 @@
+---
+/**
+ * Walker handover sheet: a lean, fridge-notice style reference that prints
+ * on exactly one black-and-white A4 page. On screen it shows as a paper
+ * preview with a Print button.
+ *
+ * All wording comes from `src/data/handover.ts`; styling lives in
+ * `src/styles/print-sheet.css`.
+ */
+import Base from '../layouts/Base.astro';
+import { handover, stitch } from '../data/handover';
+import '../styles/print-sheet.css';
+
+const { food, walking, beach, house, vet } = handover;
+const telHref = `tel:${vet.phone.replace(/\s+/g, '')}`;
+---
+
+<Base
+  title={`${stitch.name} · Walker sheet`}
+  description={`Handover sheet for ${stitch.name}'s walker.`}
+  noindex
+>
+  <header class="screen-bar">
+    <a class="screen-bar__home" href="/">{stitch.name}</a>
+    <button class="screen-bar__print" type="button" data-print>Print</button>
+  </header>
+
+  <main class="backdrop">
+    <article class="sheet" aria-labelledby="sheet-title">
+      <header class="sheet__header">
+        <h1 id="sheet-title" class="sheet__name">{stitch.name}</h1>
+        <p class="sheet__meta">{`${stitch.breed} · ${stitch.ageYears} years old`}</p>
+      </header>
+
+      <section class="sheet__section" aria-labelledby="food">
+        <h2 id="food">Food</h2>
+        <table class="meals">
+          <thead>
+            <tr>
+              <th scope="col">Meal</th>
+              <th scope="col">Normally</th>
+              <th scope="col">Give</th>
+            </tr>
+          </thead>
+          <tbody>
+            {
+              food.meals.map((meal) => (
+                <tr>
+                  <th scope="row">{meal.name}</th>
+                  <td class="meals__time">{meal.time}</td>
+                  <td>
+                    <strong class="meals__amount">{meal.amount}</strong>
+                    {meal.extra && <span class="meals__extra">{meal.extra}</span>}
+                  </td>
+                </tr>
+              ))
+            }
+          </tbody>
+        </table>
+      </section>
+
+      <section class="sheet__section" aria-labelledby="walking">
+        <h2 id="walking">Walking</h2>
+        {walking.map((line) => <p>{line}</p>)}
+      </section>
+
+      <div class="sheet__pair">
+        <section class="sheet__section" aria-labelledby="beach">
+          <h2 id="beach">At the beach</h2>
+          <ul>{beach.map((item) => <li>{item}</li>)}</ul>
+        </section>
+        <section class="sheet__section" aria-labelledby="house">
+          <h2 id="house">In the house</h2>
+          <ul>{house.map((item) => <li>{item}</li>)}</ul>
+        </section>
+      </div>
+
+      <section class="sheet__section" aria-labelledby="vet">
+        <h2 id="vet">Vet</h2>
+        <p class="vet__practice">Registered at {vet.practice}</p>
+        <p class="vet__phone"><a href={telHref}>{vet.phone}</a></p>
+      </section>
+    </article>
+  </main>
+
+  <footer class="screen-footer">
+    <p>Prints on one A4 page, black and white.</p>
+  </footer>
+</Base>
+
+<script>
+  document.querySelector<HTMLButtonElement>('[data-print]')?.addEventListener('click', () => {
+    window.print();
+  });
+</script>

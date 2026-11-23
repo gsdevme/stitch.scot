@@ -1,0 +1,43 @@
+# Builds the Astro site and publishes it to GitHub Pages.
+# Requires the repository's Pages source to be set to "GitHub Actions"
+# (Settings → Pages → Build and deployment → Source).
+name: Deploy to GitHub Pages
+
+on:
+  # Every push to main publishes the site.
+  push:
+    branches: [main]
+  # Allows a manual re-deploy from the Actions tab.
+  workflow_dispatch:
+
+# Minimum permissions the Pages deployment needs: read the repo, write the
+# Pages site, and mint the OIDC token deploy-pages uses to prove provenance.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# One deployment at a time; a newer push waits rather than cancelling a
+# deployment that is already mid-publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      # Detects npm from package-lock.json, runs the build, and uploads
+      # dist/ as the Pages artifact.
+      - uses: withastro/action@v6
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
