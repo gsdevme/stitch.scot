@@ -3,13 +3,15 @@
 The website of Stitch, an Alaskan Malamute. A static [Astro](https://astro.build) site.
 
 - `/` — homepage.
-- `/walker` — a one-page handover sheet for the dog walker, designed to print
-  on a single A4 page in black and white.
+- `/info` — a one-page handover sheet for the dog walker, designed to print
+  on a single A4 page in black and white. Not linked from the homepage and
+  marked `noindex`; reachable by URL only.
 
 ## Editing
 
-- Sheet content and Stitch's basic facts (including his age) live in
-  `src/data/handover.ts`. Both pages read from it.
+- Sheet content and Stitch's basic facts (including his date of birth) live in
+  `src/data/handover.ts`. Both pages read from it, and work out his age
+  from the date of birth.
 - The homepage photo is `src/assets/stitch-hero.jpg`; replace that file to
   change it.
 

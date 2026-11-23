@@ -7,9 +7,16 @@
  * the sheet never relies on colour, tints or backgrounds to carry meaning.
  */
 
+/*
+ * The bottom margin is deliberately deeper than the others. WebKit's print
+ * dialog (Safari-engine browsers on macOS) positions the page from the
+ * system's default 90pt bottom margin rather than this rule's, so a smaller
+ * value here pushes the top of the sheet off the paper. The sheet is short
+ * enough that the extra space is never seen.
+ */
 @page {
   size: A4;
-  margin: 12mm;
+  margin: 12mm 12mm 90pt;
 }
 
 :root {
@@ -92,8 +99,8 @@ body:has(.sheet) {
   box-shadow:
     0 1px 2px rgb(0 0 0 / 0.12),
     0 12px 32px rgb(0 0 0 / 0.18);
-  font-size: 14pt;
-  line-height: 1.4;
+  font-size: 12.5pt;
+  line-height: 1.35;
 }
 
 .sheet p,
@@ -102,16 +109,16 @@ body:has(.sheet) {
 }
 
 .sheet p + p {
-  margin-top: 2.5mm;
+  margin-top: 2mm;
 }
 
 .sheet__header {
-  padding-bottom: 5mm;
+  padding-bottom: 4mm;
 }
 
 .sheet__name {
   margin: 0;
-  font-size: 52pt;
+  font-size: 46pt;
   font-weight: 900;
   line-height: 1;
   letter-spacing: -0.02em;
@@ -119,20 +126,20 @@ body:has(.sheet) {
 }
 
 .sheet__meta {
-  margin-top: 2mm;
-  font-size: 17pt;
+  margin-top: 1.5mm;
+  font-size: 15pt;
   font-weight: 700;
 }
 
 .sheet__section {
   border-top: var(--rule);
-  padding: 4mm 0 5.5mm;
+  padding: 3mm 0 4mm;
   break-inside: avoid;
 }
 
 .sheet__section h2 {
-  margin: 0 0 3.5mm;
-  font-size: 26pt;
+  margin: 0 0 2.5mm;
+  font-size: 22pt;
   font-weight: 900;
   line-height: 1.1;
   letter-spacing: 0.02em;
@@ -144,7 +151,7 @@ body:has(.sheet) {
 }
 
 .sheet__section li + li {
-  margin-top: 2.5mm;
+  margin-top: 2mm;
 }
 
 .sheet__pair {
@@ -163,7 +170,7 @@ body:has(.sheet) {
 
 .meals th,
 .meals td {
-  padding: 3mm 3mm 3mm 0;
+  padding: 2.5mm 3mm 2.5mm 0;
   text-align: left;
   vertical-align: top;
 }
@@ -171,9 +178,10 @@ body:has(.sheet) {
 .meals thead th {
   padding-top: 0;
   padding-bottom: 1.5mm;
-  font-size: 10.5pt;
+  font-size: 10pt;
   font-weight: 700;
   letter-spacing: 0.08em;
+  white-space: nowrap;
   text-transform: uppercase;
   border-bottom: var(--rule-thin);
 }
@@ -184,20 +192,20 @@ body:has(.sheet) {
 
 .meals tbody th {
   width: 24%;
-  font-size: 15pt;
+  font-size: 14pt;
   font-weight: 800;
 }
 
 .meals__time {
-  width: 16%;
-  font-size: 15pt;
+  width: 18%;
+  font-size: 14pt;
   font-weight: 700;
   white-space: nowrap;
 }
 
 .meals__amount {
   display: block;
-  font-size: 16pt;
+  font-size: 15pt;
   font-weight: 800;
   line-height: 1.25;
 }
@@ -211,7 +219,7 @@ body:has(.sheet) {
 /* Vet */
 
 .vet__phone {
-  font-size: 38pt;
+  font-size: 30pt;
   font-weight: 900;
   line-height: 1.15;
   letter-spacing: 0.01em;
@@ -286,7 +294,7 @@ body:has(.sheet) {
   }
 
   .meals__time::before {
-    content: 'Normally ';
+    content: 'Usually ';
     font-weight: 400;
   }
 

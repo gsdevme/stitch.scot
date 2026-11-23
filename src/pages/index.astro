@@ -1,17 +1,24 @@
 ---
 /**
  * "Postcard" homepage: one full-bleed photo of Stitch with his name set large
- * over the lower left, a one-line introduction and two links.
+ * across the top left, a one-line introduction and, at the bottom, a link to
+ * his Instagram.
+ * `/info` is deliberately not linked from here: it is reachable by URL only.
  *
- * The hero is `src/assets/stitch-hero.jpg`; replacing that one file with a
- * real photo is all it takes to change the picture.
+ * The hero is `src/assets/stitch-hero.jpg`. The layout is fitted to that
+ * photo: Stitch fills the lower two thirds, left of centre, under a band of
+ * dark sea. The name is capped by viewport height so it stays inside that band
+ * above his ears, and `object-position` keeps him in frame when a tall
+ * viewport crops the sides. A replacement photo with the subject elsewhere
+ * needs the `.name` size and `.photo` position revisiting.
  */
 import { Image } from 'astro:assets';
 import Base from '../layouts/Base.astro';
 import hero from '../assets/stitch-hero.jpg';
-import { numberInWords, stitch } from '../data/handover';
+import Age from '../components/Age.astro';
+import { ageInYears, numberInWords, stitch } from '../data/handover';
 
-const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${stitch.home}.`;
+const intro = `${stitch.breed}. ${numberInWords(ageInYears(stitch.dateOfBirth))} years old. ${stitch.home}.`;
 ---
 
 <Base title={`${stitch.name} · ${stitch.breed}`} description={`${stitch.name}: ${intro}`}>
@@ -26,13 +33,14 @@ const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${s
       fetchpriority="high"
     />
     <div class="caption">
-      <h1 class="name">{stitch.name}</h1>
-      <p class="intro">{intro}</p>
+      <header>
+        <h1 class="name">{stitch.name}</h1>
+        <p class="intro">{stitch.breed}. <Age format="words" /> years old. {stitch.home}.</p>
+      </header>
       <nav class="actions" aria-label="Links">
         <a class="button button--solid" href={stitch.instagram.url} rel="me noopener">
           Instagram
         </a>
-        <a class="button button--outline" href="/walker">Walker sheet</a>
       </nav>
     </div>
   </main>
@@ -43,7 +51,6 @@ const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${s
     position: relative;
     min-height: 100svh;
     display: flex;
-    align-items: flex-end;
     overflow: hidden;
     background: #2b2a27;
     color: #fff;
@@ -55,25 +62,25 @@ const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${s
     width: 100%;
     height: 100%;
     object-fit: cover;
-    object-position: center;
+    object-position: 27% center;
   }
 
   .postcard::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(
-      to top,
-      rgb(0 0 0 / 0.78) 0%,
-      rgb(0 0 0 / 0.45) 35%,
-      rgb(0 0 0 / 0) 65%
-    );
+    background:
+      linear-gradient(to bottom, rgb(0 0 0 / 0.5) 0%, rgb(0 0 0 / 0) 42%),
+      linear-gradient(to top, rgb(0 0 0 / 0.4) 0%, rgb(0 0 0 / 0) 28%);
     pointer-events: none;
   }
 
   .caption {
     position: relative;
     z-index: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
     width: 100%;
     padding: clamp(1.25rem, 5vw, 4rem);
     padding-bottom: max(clamp(1.5rem, 6vw, 4.5rem), env(safe-area-inset-bottom));
@@ -81,7 +88,7 @@ const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${s
 
   .name {
     margin: 0;
-    font-size: clamp(4.5rem, 21vw, 17rem);
+    font-size: clamp(4rem, min(21vw, 16svh), 17rem);
     font-weight: 900;
     line-height: 0.85;
     letter-spacing: -0.04em;
@@ -128,15 +135,6 @@ const intro = `${stitch.breed}. ${numberInWords(stitch.ageYears)} years old. ${s
   .button--solid:hover {
     background: transparent;
     color: #fff;
-  }
-
-  .button--outline {
-    color: #fff;
-  }
-
-  .button--outline:hover {
-    background: #fff;
-    color: #111;
   }
 
   @media (max-width: 34rem) {

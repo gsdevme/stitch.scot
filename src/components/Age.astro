@@ -1,0 +1,29 @@
+---
+/**
+ * Stitch's current age, as digits ("7") or a capitalised word ("Seven").
+ *
+ * The site is static, so the age baked in at build time would go stale on his
+ * birthday until the next deploy. The build-time value is rendered as a
+ * fallback and a small script recalculates it from his date of birth when the
+ * page loads, which keeps the printed sheet right too.
+ */
+import { ageInYears, numberInWords, stitch } from '../data/handover';
+
+interface Props {
+  format?: 'digits' | 'words';
+}
+
+const { format = 'digits' } = Astro.props;
+const age = ageInYears(stitch.dateOfBirth);
+---
+
+<span data-age={format}>{format === 'words' ? numberInWords(age) : age}</span>
+
+<script>
+  import { ageInYears, numberInWords, stitch } from '../data/handover';
+
+  const age = ageInYears(stitch.dateOfBirth);
+  for (const el of document.querySelectorAll<HTMLElement>('[data-age]')) {
+    el.textContent = el.dataset.age === 'words' ? numberInWords(age) : String(age);
+  }
+</script>

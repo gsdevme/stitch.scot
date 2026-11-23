@@ -7,6 +7,7 @@
  * All wording comes from `src/data/handover.ts`; styling lives in
  * `src/styles/print-sheet.css`.
  */
+import Age from '../components/Age.astro';
 import Base from '../layouts/Base.astro';
 import { handover, stitch } from '../data/handover';
 import '../styles/print-sheet.css';
@@ -16,8 +17,8 @@ const telHref = `tel:${vet.phone.replace(/\s+/g, '')}`;
 ---
 
 <Base
-  title={`${stitch.name} · Walker sheet`}
-  description={`Handover sheet for ${stitch.name}'s walker.`}
+  title={`${stitch.name} · Info`}
+  description={`Feeding, walking and vet details for ${stitch.name}.`}
   noindex
 >
   <header class="screen-bar">
@@ -29,7 +30,7 @@ const telHref = `tel:${vet.phone.replace(/\s+/g, '')}`;
     <article class="sheet" aria-labelledby="sheet-title">
       <header class="sheet__header">
         <h1 id="sheet-title" class="sheet__name">{stitch.name}</h1>
-        <p class="sheet__meta">{`${stitch.breed} · ${stitch.ageYears} years old`}</p>
+        <p class="sheet__meta">{stitch.breed} · <Age /> years old</p>
       </header>
 
       <section class="sheet__section" aria-labelledby="food">
@@ -38,8 +39,8 @@ const telHref = `tel:${vet.phone.replace(/\s+/g, '')}`;
           <thead>
             <tr>
               <th scope="col">Meal</th>
-              <th scope="col">Normally</th>
-              <th scope="col">Give</th>
+              <th scope="col">Usual time</th>
+              <th scope="col">What he gets</th>
             </tr>
           </thead>
           <tbody>
@@ -77,7 +78,7 @@ const telHref = `tel:${vet.phone.replace(/\s+/g, '')}`;
 
       <section class="sheet__section" aria-labelledby="vet">
         <h2 id="vet">Vet</h2>
-        <p class="vet__practice">Registered at {vet.practice}</p>
+        <p class="vet__practice">He is registered with {vet.practice}.</p>
         <p class="vet__phone"><a href={telHref}>{vet.phone}</a></p>
       </section>
     </article>
